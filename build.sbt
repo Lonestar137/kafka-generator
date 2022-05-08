@@ -13,7 +13,6 @@ lazy val root = (project in file("."))
     libraryDependencies += "org.apache.kafka" %% "kafka" % "2.4.1",
     //libraryDependencies += "org.apache.kafka" %% "kafka-client" % "2.4.1",
     libraryDependencies += "kafka-client" % "kafka-client" % "2.4.1"from "https://repo1.maven.org/maven2/org/apache/kafka/kafka-clients/2.4.1/kafka-clients-2.4.1.pom",
-    libraryDependencies += "org.json4s" %% "json4s-jackson" % "4.0.5",
     libraryDependencies += "com.typesafe.play" %% "play-json" % "2.7.4"
 
 

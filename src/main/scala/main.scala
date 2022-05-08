@@ -1,13 +1,11 @@
 import java.util.Properties
+import java.util.Calendar
 import org.apache.kafka.clients.producer.{KafkaProducer, ProducerRecord}
 import org.apache.kafka.clients.consumer.{ConsumerConfig, KafkaConsumer}
 import scala.collection.JavaConverters._
 
 //json
 import play.api.libs.json._
-//unused
-import org.json4s._
-import org.json4s.jackson.JsonMethods._
 
 
 trait OutputFunctions {
@@ -39,6 +37,10 @@ trait OutputFunctions {
 
 object Main extends App{
 
+    def log(value : String) : Unit = {
+      println("[" + Calendar.getInstance().getTime().toString() + "] " + value);
+    }
+
     def readCSV(fileName: String): List[String] = {
       val bufferedSource = scala.io.Source.fromFile(fileName)
       val lines = bufferedSource.getLines.toList
@@ -56,12 +58,9 @@ object Main extends App{
         val producer = new KafkaProducer[String, String](props)
 
         try{
-            val record = new ProducerRecord[String, String](topic, value)
-            producer.send(record)
-            
+            val record = new ProducerRecord[String, String](topic, value)            
             val metadata = producer.send(record)
-            //println(s"sent record $key $value")
-            println("sent record")
+            println("Record sent")
         } catch {
             case e: Exception => e.printStackTrace()
         } finally {
@@ -70,42 +69,38 @@ object Main extends App{
 
 
     }
-//
+
     def consumer(topic: String="test"): Unit={
         val properties = new Properties()
         properties.put("bootstrap.servers", "localhost:9092")
         properties.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer")
         properties.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer")
-        properties.put("group.id", "test")
+        properties.put("group.id", topic)
         properties.put("enable.auto.commit", "true")
         properties.put("auto.commit.interval.ms", "1000")
         properties.put("auto.offset.reset", "earliest")
 
         val kafkaConsumer = new KafkaConsumer(properties)
         val topics = List(topic)
-        implicit val formats = org.json4s.DefaultFormats
         var  subscribed = true
-
-
 
         try{
             kafkaConsumer.subscribe(topics.asJava)
-            while(subscribed){
+            //while(subscribed){
                 val records = kafkaConsumer.poll(100)
                 for(record <- records.asScala){
                     val record_string: String = record.value()
                     //println(s"offset = ${record.offset()}, key = ${record.key()}, value = ${record.value()}")
                     //val jsonD = parse(record.value()).extract[Map[String, Any]]
                     val jsonD: JsValue = Json.parse(record_string)
-                    val jsonD2: JsObject = jsonD.as[JsObject]
                     println("Key():"+jsonD("order_id"))
                     //println("Keyjsobj:"+jsonD.as[JsObject]("order_id"))
-                    println("Keyjsobj:"+jsonD2("order_id"))
-                    println("Key--:"+jsonD \\ "order_id")
-                    println("ets")
+                    //val jsonD2: JsObject = jsonD.as[JsObject]
+                    // println("Keyjsobj:"+jsonD2("order_id"))
+                    // println("Key--:"+jsonD \\ "order_id")
 
                 }
-            }
+            //}
         } catch {
             case e: Exception => e.printStackTrace()
         } finally {
@@ -113,14 +108,21 @@ object Main extends App{
         }
     }
 
+    log("APP START")
+
     //val countries_csv = readCSV("/home/jonesgc/Documents/countries.csv")
     //countries_csv.foreach(v => producer(v, "test"))
 
+    log("PRODUCER START")
     for(i <- 1 to 10){
         producer("generatorTest", "{\"order_id\": "+i+", \"customer_id\": 1001}")
     }
+    log("PRODUCER END")
 
+    log("CONSUMER START")
     //producer("test", "test")
     consumer("generatorTest")
+
+    log("APP END")
 
 }
