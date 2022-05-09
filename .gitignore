@@ -10,3 +10,4 @@ TODO.md
 *.cache
 .vscode*
 project*
+*/target/streams/*
