@@ -17,4 +17,6 @@ class Customer{
     def possible_product_ids_= (new_ids: List[Int]): Unit = _possible_product_ids = new_ids
     def city_= (new_city: String): Unit = _city = new_city
     def country_= (new_country: String): Unit = _country = new_country
+
+
 }
