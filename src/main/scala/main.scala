@@ -50,9 +50,9 @@ object Main extends App{
       lines
     }
 
-    def producer(topic: String = "test", value: String): Unit = {
+    def producer(node: String, topic: String = "test", value: String): Unit = {
         val props: Properties = new Properties()
-        props.put("bootstrap.servers", "3.94.111.218:9092")
+        props.put("bootstrap.servers", node)
         props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer")
         props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer")
         props.put("acks", "all")
@@ -63,8 +63,6 @@ object Main extends App{
             val record = new ProducerRecord[String, String](topic, value)
             producer.send(record)
             
-            val record = new ProducerRecord[String, String](topic, value)            
-            val metadata = producer.send(record)
             println("Record sent")
         } catch {
             case e: Exception => e.printStackTrace()
@@ -123,12 +121,11 @@ object Main extends App{
 
     log("PRODUCER START")
     for(i <- 1 to 10){
-        producer("generatorTest", "{\"order_id\": "+i+", \"customer_id\": 1001}")
+        producer("localhost:9092", "generatorTest", "{\"order_id\": "+i+", \"customer_id\": 1001}")
     }
     log("PRODUCER END")
 
     log("CONSUMER START")
-    //producer("test", "test")
     consumer("generatorTest")
 
     log("APP END")
