@@ -201,13 +201,13 @@ object Generator extends App{
   // TREND EXAMPLE - higher steel prices in january (pseudocode)
   // if (date.month == january && product.product_name.contains("steel")) { product.product_price = product.product_price * 1.1; }
   
-  var order : Order = null;
-  var customer : Customer = null;
-  var product : Product = null;
-  var productType : Int = 0;
-  var output : String = "";
-  
-  for (i <- 0 until 100) {
+  def generateOrderJSON() : String = {
+
+    var order : Order = null;
+    var customer : Customer = null;
+    var product : Product = null;
+    var productType : Int = 0;
+    var output : String = "";
     
     customer = generateCustomer();
     
@@ -238,8 +238,12 @@ object Generator extends App{
     output = output + "\t\"failure_reason\" : \"" + order.payment_failure_reason + "\"\n";
     output = output + "}";
 
-    println(output);
+    return output;
 
   }
+
+  // for (i <- 0 until 10) {
+  //   println(generateOrderJSON());
+  // }
 
 }
