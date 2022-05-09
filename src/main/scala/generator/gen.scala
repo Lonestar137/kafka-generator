@@ -1,9 +1,10 @@
+package org.goldteam.generator;
 import GeneratorObjects._
 import scala.util.Random
 import java.util.Date
 
 
-object Generator extends App{
+object Generator {
   
   def randomString(list: List[String]) : String = {
     return list(Random.nextInt(list.size));
@@ -245,5 +246,12 @@ object Generator extends App{
   // for (i <- 0 until 10) {
   //   println(generateOrderJSON());
   // }
+
+}
+
+object GeneratorMain extends App {
+  for (i <- 0 until 10) {
+    println(Generator.generateOrderJSON());
+  }
 
 }

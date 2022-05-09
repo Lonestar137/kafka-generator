@@ -1,5 +1,7 @@
 package org.goldteam.kafka.producer;
 
+import java.util.Date
+import scala.util.Random
 import java.util.Calendar
 import java.util.Properties
 import scala.collection.JavaConverters._
@@ -9,7 +11,8 @@ import org.apache.kafka.clients.consumer.{ConsumerConfig, KafkaConsumer}
 //json
 import play.api.libs.json._
 
-import GeneratorObjects._
+//import GeneratorObjects._
+import org.goldteam.generator.Generator
 import logging.OutputFunctions._
 
 
@@ -39,8 +42,10 @@ object GoldteamProducer{
 }
 
 object KafkaProducerMain extends App {
+  log("PRODUCER MAIN START")
   //loc, topic, value
-  GoldteamProducer.producer("localhost:9092", "test", "test")
-  
-
+  for(i <- 1 to 100){
+    var value = Generator.generateOrderJSON()
+    GoldteamProducer.producer("localhost:9092", "generatorTest", value)
+  }
 }
