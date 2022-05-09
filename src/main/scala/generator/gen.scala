@@ -1,5 +1,6 @@
 import GeneratorObjects._
 import scala.util.Random
+import java.util.Date
 
 //object SparkConsumer{
 //    val spark = SparkSession.builder().appName("Generator").master("local[*]").getOrCreate()
@@ -19,16 +20,22 @@ object Generator extends App{
   }
 
   // order_id = increasing integer value
-  
+  var current_order_id : Int = 0;
+
   // payment_type = pull from {card, Internet Banking, UPI, Wallet}
+  val order_payment_types : List[String] = List("Credit","Debit","Internet Banking","UPI","Cash");
   // qty (Quantity ordered) = randomInRange
   // price (Price of the product) = dictionary<product_name, float>
   // datetime (Date and time when order was placed)
+  var generatorDate : Date = new Date();
+  generatorDate.setTime(System.currentTimeMillis()/1000); // unix epoch
   
   // ecommerce_website_name (Site from where order was placed) = pull from weighted listOfWebsites
-  // payment_txn_id (Payment Transaction Confirmation Id) = another unique integer based on order id?
+  val order_ecommerce_website_names : List[String] = List("amazon.com","walmart.com","ebay.com");
+  // payment_txn_id (Payment Transaction Confirmation Id) = use order_id
   // payment_txn_success (Payment Success or Failure (Y=Success. N=Failed)) = boolean based on failure probability
   // failure_reason (Reason for payment failulure) = pull from weighted listOfFailureReasons
+  val order_failure_reasons : List[String] = List("Insufficient Funds","Card Expired","Account Suspended","Invalid Billing Address","Invalid Payment Gateway");
 
   // customer_id = dictionary<customer_name, int>
   var customer_ids = collection.mutable.Map[String, Int]();
@@ -36,6 +43,25 @@ object Generator extends App{
   val first_names : List[String] = List("Larisa","Tabbatha","Jehu","Arluene","Brina","Clare","Petronella","Tiphani","Vanda","Duffie","Hinda","Augustina","Benny","Gene","Thaine","Ailene","Kat","Barthel","Oralla","Patrizia","Maxim","Aland","Stepha","Sandor","Thaddus","Kyle","Celestyn","Dory","Ophelia","Agathe","Daisey","Morna","Juliet","Smitty","Had","Barny","Wittie","Saidee","Merrie","Linell","Rorke","Trenna","Les","Englebert","Ronica","Adeline","Carlye","Federica","Lil","James","Joaquin","Engelbert","Alyce","Anna-maria","Britteny","Annice","Lela","Lorraine","Agneta","Noble","Galvin","Stanleigh","Darb","Pren","Carey","Ced","Nan","Sephira","Petronia","Susi","Cecile","Mary","Cecil","Melicent","Care","Editha","William","Krishnah","Norbie","Lynnet","Basil","Cris","Dollie","Myrwyn","Micheal","Morie","Gerladina","Crichton","Leontine","Vale","Dari","Bogey","Lyon","Konstance","Faina","Pepita","Muffin","Rosalinda","Myrwyn","Ari","Phylys","Bertie","Vonny","Marve","Cassie","Calida","Kellia","Kyle","Stavros","Carma","Emory","Silas","Waylon","Chloette","Elva","Leola","Nerty","Donelle","Gabey","Ody","Kristine","Brucie","Harbert","Jonell","Helsa","Marion","Thomasine","Darci","Bernarr","Gordan","Alvin","Colly","Nadine","Dulsea","Zitella","Adlai","Cart","Harald","Ailsun","Link","Feliza","Ronnie","Padget","Josie","Kandy","Pet","Tabbitha","Rheba","Alexander","Sabrina","Lorianna","Titus","Rosalinde","Germaine","Octavia","Faulkner","Hortensia","Elwira","Jervis","Meggy","Connie","Terrye","Brenda","Jillayne","Gardner","Petunia","Gannie","Berkley","Loydie","Maryanne","Cathrin","Salvidor","Marlin","Roma","Salli","Harriett","Cymbre","Anthea","Elissa","Martin","Sherlock","Ferrell","Bone","Johny","Derwin","Delilah","Mead","Lacee","Maxwell","Rosabella","Coleman","Fredric","Charil","Noah","Madelene","Enos","Cordelia","Adelheid","Robers","Melli","Izak","Trueman","Marianna","Dory","Teresina","Allis","Averil","Britt","Vance","Pen","Rowena","Constantine","Krissie","Cobbie","Sandy","Torrey","Roberto","Natassia","Shaylynn","Josh","Nelly","Jody","Gan","Laurena","Erhart","Danny","Etienne","Lucio","Myra","Francklyn","Immanuel","Jordon","Iosep","Terrijo","Averyl","Ronnie","Jonathan","Nessy","Vasily","Gunar","Leroy","Allyson","Lorne","Ollie","Preston","Ulrich","Claudian","Robinetta","Deny","Eachelle","Gard","Merrielle","Corbett","Pennie","Timmie","Erroll","Teddy","Nickola","Timothy","Hugo","Hastings","Lionello","Tana","Yehudit","Milicent","Morgen","Colby","Immanuel","Culver","Selestina","Dolph","Becki","Donielle","Vonny","Mitchael","Shauna","Stan","Bat","Fowler","Yardley","Avril","John","Alexina","Danella","Hilliard","Charlton","Philly","Jane","Micky","Byrle","Kris","Jamill","Tammara","Enrichetta","Colly","Corinna","Delphine","Cherilynn","Manuel","Stan");
   val last_names : List[String] = List("Whale","Gurwood","Ludman","Ollivier","Shelbourne","Gammie","Powlett","Woollin","Bentz","Palatini","Aneley","Cogswell","Ullrich","Castanares","Anglim","Alessandrelli","Pechacek","O'Dooghaine","Paxforde","Sandeland","Tovey","Kubec","Finkle","Hamper","Meenan","Yarranton","Huband","Perkin","Duchenne","Rampling","Chyuerton","Olivia","Brigdale","Navarijo","Penwright","Highwood","Titcom","Toffoletto","Riche","Alan","Ramlot","Hildrew","Jesse","Lusgdin","Pothergill","Genn","Terbrugge","Goodhand","Norrie","Meneyer","Floweth","Rozenbaum","Crayden","Hawyes","Grinham","Dufore","McAlindon","Tatham","Demaid","Bartoshevich","Jerisch","Ruvel","Larderot","Stanbra","Spellicy","Jullian","Willwood","McGrouther","Stoggles","Wakely","Baughn","Darrel","Credland","Gretton","Dielhenn","Ten Broek","Gustus","Muckleston","Imlin","Doxsey","Sporle","Bridal","Isaaksohn","Breagan","Martinello","Thrustle","Ewestace","Gollin","Lewerenz","Pethick","Jays","Gadney","Simmens","Neath","Bunclark","Stonebanks","Behnke","Vasechkin","Duthy","Crowe","Aveyard","Flacknell","Gyurko","Vell","Heale","Ablewhite","Messitt","Penniall","Timbrell","Hewell","Hanratty","Gothup","Schwand","Bartunek","Humbey","Howood","Alltimes","Hutson","Mathew","Klasen","Mitrovic","Trowbridge","Wythill","Guyon","Brigman","Martignoni","McGill","Necolds","Morewood","Cossentine","Hollow","Morrel","Stephens","Oswald","de Aguirre","Lerhinan","Burniston","Beedon","Mallan","Rogans","Bond","Kless","Rowell","Bramich","Barkaway","Troutbeck","Winchcombe","Brombell","Reder","Keenlayside","Cohen","D'Abbot-Doyle","Finnigan","Howcroft","Mauchline","Maddams","Werrilow","Sarfatti","Strathman","Dufer","Severs","Leversuch","Izhakov","Fabb","Kegan","Darnell","Vinick","Kemshell","Ribou","Pape","Burgett","Connor","Shapcott","Roz","Thome","Meneyer","Germon","Casbon","Jon","Coning","Kubera","Dodgshon","Jansens","Bomb","Bartot","Terry","Iacobetto","Mattussevich","Grolmann","Freer","Troth","Kingh","Colgan","Fairlie","Bignold","Gilberthorpe","Rosindill","Karolowski","Dovington","Aitken","Witherbed","Leipold","Vescovini","Beaney","Duggon","Frankis","Darwin","Ventris","Boarer","Estick","Amps","Balling","Sperrett","Foard","Knowlys","Boughen","Cornbill","Mossdale","Supple","Bernuzzi","Haggerty","Keal","Bohje","Gatward","Loding","Maggiore","Ashment","Soldi","Dymick","Stolze","Forton","England","Tuite","Manoelli","Gilhespy","Dallas","Sealeaf","Petti","Totterdill","Hallihan","Dudman","Harcase","McCorkell","Drewet","Dongate","Kollatsch","Flemmich","Caldero","Ribeiro","Pougher","Waterhous","Challicombe","Gorgler","Cisco","Mallender","Segrave","Samsin","Beckerleg","De Morena","Merioth","Hayter","Pancast","Bear","Jackes","Micka","Wooton","Chatainier","Ellerey","Krzyzaniak","Witcherley","Hayer","Rizzello","Hallock","Carvilla","Baynes","Giffkins","Jesteco","Packington","Stive","Dinsmore","Berrey","Beyn","McClenan","Mountney","Pietroni","Dowsey","Yackiminie","Phair","Bazek","McCrostie","Casina","Lehon","Cometti","Jermin","Clapperton","Solman","Kinson","Jewell","Philipard","Yarrall");  
   val pregenerated_names : List[String] = List("Walmart", "Home Depot")
+
+  def generateOrder(customer : Customer, product : Product) : Order = {
+    var newOrder : Order = new Order();
+    newOrder.order_id_=(current_order_id);
+    newOrder.payment_txn_id_=(current_order_id.toString());
+    current_order_id += 1;
+    newOrder.order_datetime_=(new Date(generatorDate.getTime()));
+    generatorDate.setTime(generatorDate.getTime + (10000 * Random.nextInt(1000)))
+    newOrder.order_customer_id_=(customer.customer_id);
+    newOrder.order_product_id_=(product.product_id);
+    newOrder.qty_=(Random.nextInt(10));
+    newOrder.ecommerce_website_name_=(randomString(order_ecommerce_website_names));
+    newOrder.payment_type_=(randomString(order_payment_types));
+    newOrder.payment_txn_success_=(Random.nextInt(100) < 98); // 98% success rate
+    if (!newOrder.payment_txn_success) {
+      newOrder.payment_failure_reason_=(randomString(order_failure_reasons));
+    }
+    return newOrder;
+  }
 
   // country (Customer Country) = pull from weighted listOfCountries
   // city (Customer City) = pull from dictionary<country, city_list>
@@ -151,25 +177,79 @@ object Generator extends App{
   
 
   // GENERATE CUSTOMER TEST
-  var genCustomer : Customer = null; 
-  println();
-  for (i <- 0 until 3) {
-    genCustomer = generateCustomer();
-    genCustomer.print();
-  }
-  println();
-  listCustomers();
-  println();
+  // var genCustomer : Customer = null; 
+  // println();
+  // for (i <- 0 until 3) {
+  //   genCustomer = generateCustomer();
+  //   genCustomer.print();
+  // }
+  // println();
+  // listCustomers();
+  // println();
 
   // GENERATE PRODUCTS TEST
-  generateElectronic().print();
-  generateElectronic().print();
-  generateClothing().print();
-  generateClothing().print();
-  generateTool().print();
-  generateTool().print();
+  // generateElectronic().print();
+  // generateElectronic().print();
+  // generateClothing().print();
+  // generateClothing().print();
+  // generateTool().print();
+  // generateTool().print();
 
+
+  // GENERATE ORDER TEST
+  //var longTime : Long = 1000000000000l;
+  // for (i <- 0 until 20) {
+  //   generatorDate.setTime(10000000000l * i)
+  //   println(generatorDate.toGMTString())
+  // }
+  
+  // var orderCustomer = generateCustomer();
+  // var orderProduct = generateClothing();
+  // var newOrder = generateOrder(orderCustomer, orderProduct);
+  // newOrder.print();
+  
   // TREND EXAMPLE - higher steel prices in january (pseudocode)
   // if (date.month == january && product.product_name.contains("steel")) { product.product_price = product.product_price * 1.1; }
+  
+  var order : Order = null;
+  var customer : Customer = null;
+  var product : Product = null;
+  var productType : Int = 0;
+  var output : String = "";
+  
+  for (i <- 0 until 100) {
+    
+    customer = generateCustomer();
+    
+    productType = Random.nextInt(3);
+    if (productType == 0) { product = generateTool(); }
+    else if (productType == 1) { product = generateElectronic(); }
+    else { product = generateClothing(); }
+    
+    order = generateOrder(customer, product);
+    
+    output = "";
+    output = output + "{\n";
+    output = output + "\t\"order_id\" : " + order.order_id + ",\n";
+    output = output + "\t\"customer_id\" : " + order.order_customer_id + ",\n";
+    output = output + "\t\"customer_name\" : \"" + customer.customer_name + "\",\n";
+    output = output + "\t\"product_id\" : " + product.product_id + ",\n";
+    output = output + "\t\"product_name\" : \"" + product.product_name + "\",\n";
+    output = output + "\t\"product_category\" : \"" + product.product_category + "\",\n";
+    output = output + "\t\"payment_type\" : \"" + order.payment_type + "\",\n";
+    output = output + "\t\"qty\" : " + order.qty + ",\n";
+    output = output + "\t\"price\" : " + product.product_price + ",\n";
+    output = output + "\t\"datetime\" : \"" + order.order_datetime.toString() + "\",\n";
+    output = output + "\t\"country\" : \"" + customer.country + "\",\n";
+    output = output + "\t\"city\" : \"" + customer.city + "\",\n";
+    output = output + "\t\"ecommerce_website_name\" : \"" + order.ecommerce_website_name + "\",\n";
+    output = output + "\t\"payment_txn_id\" : \"" + order.payment_txn_id + "\",\n";
+    output = output + "\t\"payment_txn_success\" : " + order.payment_txn_success + ",\n";
+    output = output + "\t\"failure_reason\" : \"" + order.payment_failure_reason + "\"\n";
+    output = output + "}";
+
+    println(output);
+
+  }
 
 }
