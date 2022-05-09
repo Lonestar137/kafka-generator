@@ -19,4 +19,9 @@ class Product{
     def product_category_= (new_category: String): Unit = _product_category = new_category
     def product_price_= (new_price: Double): Unit = _product_price = new_price
 
+    def print() : Unit = {
+        println(s"[${this._product_category} ${this._product_id}] ($$${f"${this._product_price}%.2f"}) ${this._product_name}");
+        println();
+    }
+
 }
