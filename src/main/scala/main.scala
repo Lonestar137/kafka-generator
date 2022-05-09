@@ -5,9 +5,9 @@ import scala.collection.JavaConverters._
 
 //json
 import play.api.libs.json._
-//unused
-import org.json4s._
-import org.json4s.jackson.JsonMethods._
+
+//import org.goldteam.generator._
+import GeneratorObjects._
 
 
 trait OutputFunctions {
@@ -48,7 +48,7 @@ object Main extends App{
 
     def producer(topic: String = "test", value: String): Unit = {
         val props: Properties = new Properties()
-        props.put("bootstrap.servers", "localhost:9092")
+        props.put("bootstrap.servers", "3.94.111.218:9092")
         props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer")
         props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer")
         props.put("acks", "all")
@@ -59,7 +59,6 @@ object Main extends App{
             val record = new ProducerRecord[String, String](topic, value)
             producer.send(record)
             
-            val metadata = producer.send(record)
             //println(s"sent record $key $value")
             println("sent record")
         } catch {
@@ -68,7 +67,6 @@ object Main extends App{
             producer.close()
         }
 
-
     }
 //
     def consumer(topic: String="test"): Unit={
@@ -76,7 +74,7 @@ object Main extends App{
         properties.put("bootstrap.servers", "localhost:9092")
         properties.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer")
         properties.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer")
-        properties.put("group.id", "test")
+        properties.put("group.id", topic)
         properties.put("enable.auto.commit", "true")
         properties.put("auto.commit.interval.ms", "1000")
         properties.put("auto.offset.reset", "earliest")
@@ -89,6 +87,7 @@ object Main extends App{
 
 
         try{
+            //Note: Redundant subscription, not necessary, leaving for example purposes.
             kafkaConsumer.subscribe(topics.asJava)
             while(subscribed){
                 val records = kafkaConsumer.poll(100)
@@ -99,10 +98,9 @@ object Main extends App{
                     val jsonD: JsValue = Json.parse(record_string)
                     val jsonD2: JsObject = jsonD.as[JsObject]
                     println("Key():"+jsonD("order_id"))
-                    //println("Keyjsobj:"+jsonD.as[JsObject]("order_id"))
-                    println("Keyjsobj:"+jsonD2("order_id"))
-                    println("Key--:"+jsonD \\ "order_id")
-                    println("ets")
+                    println("SET:"+jsonD)
+                    //println("Keyjsobj:"+jsonD2("order_id"))
+                    //println("Key--:"+jsonD \\ "order_id")
 
                 }
             }
@@ -116,11 +114,13 @@ object Main extends App{
     //val countries_csv = readCSV("/home/jonesgc/Documents/countries.csv")
     //countries_csv.foreach(v => producer(v, "test"))
 
-    for(i <- 1 to 10){
-        producer("generatorTest", "{\"order_id\": "+i+", \"customer_id\": 1001}")
-    }
+    //for(i <- 1 to 10){
+    //    producer("generatorTest", "{\"order_id\": "+i+", \"customer_id\": 1001}")
+    //}
 
-    //producer("test", "test")
-    consumer("generatorTest")
+    //consumer("generatorTest")
 
+    var ordr = new Order
+    ordr.order_id = 1
+    println(ordr.order_id)
 }
