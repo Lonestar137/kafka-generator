@@ -14,7 +14,7 @@ object Generator {
   var current_order_id : Int = 0;
 
   // payment_type = pull from {card, Internet Banking, UPI, Wallet}
-  val order_payment_types : List[String] = List("Credit","Debit","Internet Banking","UPI","Cash");
+  val order_payment_types : List[String] = List("Credit","Credit", "Credit", "Credit","Debit","Internet Banking","UPI","Cash", "Cash","Cash", "Cash", "Cash");
   // qty (Quantity ordered) = randomInRange
   // price (Price of the product) = dictionary<product_name, float>
   // datetime (Date and time when order was placed)
@@ -231,6 +231,14 @@ object Generator {
     output = output + "\t\"qty\" : " + order.qty + ",\n";
     output = output + "\t\"price\" : " + product.product_price + ",\n";
     output = output + "\t\"datetime\" : \"" + order.order_datetime.toString() + "\",\n";
+
+    ////TODO -- remove the unix timestamp.  Placed here for testing purposes. conver to format "yyyy-MM-dd HH:mm:ss"
+    val fmt = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+    val date = fmt.format(order.order_datetime)
+    ////output = output + "\t\"time\" : " + order.order_datetime.getTime()/1000 + ",\n";
+    output = output + "\t\"time\" : \"" + date + "\",\n";
+    println(date)
+
     output = output + "\t\"country\" : \"" + customer.country + "\",\n";
     output = output + "\t\"city\" : \"" + customer.city + "\",\n";
     output = output + "\t\"ecommerce_website_name\" : \"" + order.ecommerce_website_name + "\",\n";

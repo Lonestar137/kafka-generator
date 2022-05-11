@@ -11,6 +11,9 @@ import org.apache.kafka.clients.consumer.{ConsumerConfig, KafkaConsumer}
 //json
 import play.api.libs.json._
 
+//random
+import scala.util.Random
+
 //import GeneratorObjects._
 import org.goldteam.generator.Generator
 import logging.OutputFunctions._
@@ -44,8 +47,17 @@ object GoldteamProducer{
 object KafkaProducerMain extends App {
   log("PRODUCER MAIN START")
   //loc, topic, value
-  for(i <- 1 to 100){
+  var run = true
+  var sleep_time = scala.util.Random.nextInt(30)*10 //wait time between messages 10-300 ms
+  while(run){
     var value = Generator.generateOrderJSON()
     GoldteamProducer.producer("localhost:9092", "generatorTest", value)
+    Thread.sleep(sleep_time) //sleep for 1 second
+    sleep_time = scala.util.Random.nextInt(30)*10
   }
+
+  //for(i <- 1000000 until 8000000 by 500){
+  //  var value = Generator.generateOrderJSON()
+  //  GoldteamProducer.producer("localhost:9092", "generatorTest", value)
+  //}
 }

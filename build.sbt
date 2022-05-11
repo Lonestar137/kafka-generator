@@ -9,11 +9,16 @@ ThisBuild / organizationName := "goldteam"
 lazy val spark = Seq(
   "org.apache.spark" %% "spark-core" % "2.4.8",
   "org.apache.spark" %% "spark-hive" % "2.4.8",
+  "org.apache.spark" %% "spark-hive" % "2.4.8",
   "org.apache.spark" %% "spark-sql" % "2.4.8",
   "org.apache.spark" %% "spark-sql-kafka-0-10" % "2.4.8",
   "org.apache.spark" %% "spark-streaming-kafka-0-10" % "2.4.8",
   "org.apache.spark" %% "spark-streaming" % "2.4.8" % "provided"
 
+)
+
+lazy val jdbc = Seq(
+    "org.postgresql" % "postgresql" % "42.3.3"
 )
 lazy val vega = Seq(
     //"org.openjfx" % "javafx-swing" % "17",
@@ -38,6 +43,7 @@ lazy val root = (project in file("."))
     libraryDependencies ++= spark,
     libraryDependencies ++= vega,
     libraryDependencies ++= kafka,
+    libraryDependencies ++= jdbc
 
 
 
