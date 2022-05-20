@@ -34,9 +34,20 @@ lazy val play = Seq(
     "com.typesafe.play" %% "play-json" % "2.7.4"
 )
 
+
+assemblyMergeStrategy in assembly := {
+    case PathList("META-INF", xs @ _*) => MergeStrategy.discard
+    case x => MergeStrategy.first
+}
+
 lazy val root = (project in file("."))
   .settings(
     name := "lab",
+
+    assembly / mainClass := Some("org.goldteam.kafka.consumer.SparkKafkaConsumerMain"),
+    assembly / assemblyJarName := "assembledJar.jar",
+
+
     libraryDependencies += scalaTest % Test,
     libraryDependencies += "com.github.tototoshi" %% "scala-csv" % "1.3.10",
     libraryDependencies ++= play,
