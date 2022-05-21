@@ -83,6 +83,9 @@ object SparkKafkaConsumer {
   }
 
   object writeTo {
+    OutputFunctions.log("APP START")
+    OutputFunctions.log("CONSUMER START")
+
     // specific implementations of consumer
     def psql(
         bootstrap: String = "localhost:9092",
@@ -199,8 +202,6 @@ object SparkKafkaConsumer {
 }
 //PSQL main
 object PSQLConsumer extends App {
-  OutputFunctions.log("APP START")
-  OutputFunctions.log("CONSUMER START")
   var user = ""
   var pass = ""
   var db = ""
@@ -223,7 +224,7 @@ Options:
 
 Choose One Option:
 --topic             Kafka topic to read from.
---topics            Kafka topics to read from, if you select his option don't use the other topic option. List comma separated topics.
+--topics            Kafka topics to read from, if you select this option don't use the other topic option. List comma separated topics.
 
 """
   if (args.isEmpty) {
@@ -232,6 +233,7 @@ Choose One Option:
     sys.exit
   }
 
+  // TODO option for spark cluster manager, spark_ip, spark_port, spark_processors, AND array_buffer chunk size.
   args.foreach(arg => {
     if (arg.matches("--help")) { println(helpText); sys.exit }
     else if (arg.matches("--db-host=.+")) db_host = arg.split("=")(1)
