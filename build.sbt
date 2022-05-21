@@ -44,8 +44,8 @@ lazy val root = (project in file("."))
   .settings(
     name := "lab",
 
-    assembly / mainClass := Some("org.goldteam.kafka.consumer.SparkKafkaConsumerMain"),
-    assembly / assemblyJarName := "assembledJar.jar",
+    assembly / mainClass := Some("org.goldteam.kafka.consumer.PSQLConsumer"),
+    assembly / assemblyJarName := "PSQLConsumer.jar",
 
 
     libraryDependencies += scalaTest % Test,
