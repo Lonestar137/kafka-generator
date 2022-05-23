@@ -406,10 +406,3 @@ object Generator extends App {
   println();
 
 }
-
-object GeneratorMain extends App {
-  for (i <- 0 until 10) {
-    println(Generator.generateOrderJSON());
-  }
-
-}
