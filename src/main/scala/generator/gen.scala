@@ -377,18 +377,21 @@ object Generator extends App {
     nextPaymentFailure = randomString(failablePaymentTypes);
     return generateOrderJSON(nextPaymentFailure, false, randomString(paymentFailureReasonLists(nextPaymentFailure)));
   }
-
+  
   var nextProduct : String = "";
   var payType : String = "";
-  for (i <- 0 until 30000) {
-    payType = modset_payment_types.getMod().useName;
+  def generateOrderJSON() : String = {
+    var payType = modset_payment_types.getMod().useName;
     if (payType == "Card") { nextProduct = generateOrderJSON_Card(); } 
     else if (payType == "Internet Banking") { nextProduct = generateOrderJSON_InternetBanking(); } 
     else if (payType == "UPI") { nextProduct = generateOrderJSON_UPI(); } 
     else if (payType == "Wallet") { nextProduct = generateOrderJSON_Wallet(); }
     else { nextProduct = generateOrderJSON_Failed(); }
-    nextProduct = nextProduct.replace("\n","").replace("\t","");
-    println(nextProduct);
+    return nextProduct.replace("\n","").replace("\t","");
+  }
+
+  for (i <- 0 until 30000) {    
+    println(generateOrderJSON());
   }
   
   println();

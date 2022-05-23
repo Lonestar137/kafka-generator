@@ -1,3 +1,4 @@
+package org.goldteam.generator;
 import scala.util.Random;
 import java.util.Date;
 import scala.collection.mutable.MutableList;
