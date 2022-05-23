@@ -20,6 +20,8 @@ class Mod(var name : String = "", var price : Float = 1.0f, var probability : Fl
   var trendIncreasing : Boolean = false;
   var trendActive : Boolean = false;
   var trendAlpha : Float = 0f;
+  var trendGrowOnly : Boolean = false;
+  var trendUncapped : Boolean = false;
 
   var trendStartdate : Date = null;
   var trendMaxDuration : Long = 86400l * 1000l; // 1 day
@@ -31,10 +33,21 @@ class Mod(var name : String = "", var price : Float = 1.0f, var probability : Fl
     else { return this.substrings(Random.nextInt(this.substrings.size)); }
   }
 
-  def startTrend(startDate : Date) : Unit = {
-    this.trendStartdate = new Date(startDate.getTime());
+  // Start a trend that will grow to full intensity and then return to its original values.
+  def startTrend() : Unit = {
     this.trendIncreasing = true;
     this.trendActive = true;
+  }
+
+  // Start a trend that will grow to full intensity but will not return to its original values.
+  def startTrendGrowOnly() : Unit = {
+    this.trendGrowOnly = true;
+    this.startTrend();
+  }
+  // Start a trend that will grow without an upper bound and will not return to its original values.
+  def startTrendUncapped() : Unit = {
+    this.trendUncapped = true;
+    this.startTrend();
   }
 
   def setTrendInfo(basePrice : Float, maxPrice : Float, baseProb : Float, maxProb : Float) : Unit = {
@@ -65,12 +78,15 @@ class Mod(var name : String = "", var price : Float = 1.0f, var probability : Fl
   def progressTrend() : Unit = {
     if (this.trendActive) {
       if (this.trendIncreasing) {
-        if (this.trendAlpha < 1.0f) {
+        if (this.trendAlpha < 1.0f || this.trendUncapped) {
           this.trendAlpha += Random.nextFloat() * 0.02f;
         }
         else {
           this.trendAlpha = 1.0f;
           this.trendIncreasing = false;
+          if (this.trendGrowOnly) { 
+            this.trendActive = false; 
+          }
         }
       }
       else {

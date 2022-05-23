@@ -26,6 +26,12 @@ class ModSet {
 		}
 	}
 
+	def apply(name: String): Mod = {
+		if (name == null || name.isBlank) { return null; }
+		for (mod <- this.mods) { if (mod.name == name) { return mod; } }
+        return null;
+    }
+
 	def addMod(mod : Mod) : Unit = { this.mods += mod; }
 
 	def getMod() : Mod = {
@@ -56,15 +62,6 @@ class ModSet {
 		}
 	}
 
-	def setTrendInfo(modName : String, basePrice : Float, maxPrice : Float, baseProb : Float, maxProb : Float) : Unit = {
-		for (mod <- mods) {
-			if (mod.name == modName) {
-				mod.setTrendInfo(basePrice, maxPrice, baseProb, maxProb);
-				return;
-			}
-		}
-		throw new Exception(s"Mod $modName not found. Unable to set trend info.");
-	}
 	def setPriceTrendInfo(modName: String, basePrice : Float, maxPrice : Float) : Unit = {
 		for (mod <- mods) {
 			if (mod.name == modName) {
