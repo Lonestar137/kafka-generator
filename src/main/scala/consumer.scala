@@ -215,17 +215,19 @@ Usage: scala SparkKafkaConsumer.jar --db-host=[psql_host:port] --bootstrap-serve
 
 Database credentials and servers must be defined for this program to operate correctly. Use the options below to do so.
 
-Options:
---db-host           The host server:port that contains the db to write data to.
---db                The db to write the data to.
---bootstrap-server  The kafka server to read from.
---user              Database user to access tables.
---pass              Database password to access tables.
+Required:
+  Options: --db-host           The host server:port that contains the db to write data to.
+  --db                The db to write the data to.
+  --bootstrap-server  The kafka server to read from.
+  --user              Database user to access tables.
+  --pass              Database password to access tables.
 
-Choose One Option:
---topic             Kafka topic to read from.
---topics            Kafka topics to read from, if you select this option don't use the other topic option. List comma separated topics.
+  Choose One Option:
+  --topic             Kafka topic to read from.
+  --topics            Kafka topics to read from, if you select this option don't use the other topic option. List comma separated topics.
 
+Other Options:
+  --spark-master      Not implemented.
 """
   if (args.isEmpty) {
     println("No arguments passed please refer to the below.")
