@@ -1,7 +1,7 @@
 import Dependencies._
 
 ThisBuild / scalaVersion     := "2.11.12"
-ThisBuild / version          := "0.1.0-SNAPSHOT"
+ThisBuild / version          := "0.8.0"
 ThisBuild / organization     := "com.goldteam"
 ThisBuild / organizationName := "goldteam"
 
@@ -9,7 +9,16 @@ ThisBuild / organizationName := "goldteam"
 lazy val spark = Seq(
   "org.apache.spark" %% "spark-core" % "2.4.8",
   "org.apache.spark" %% "spark-hive" % "2.4.8",
-  "org.apache.spark" %% "spark-sql" % "2.4.8"
+  "org.apache.spark" %% "spark-hive" % "2.4.8",
+  "org.apache.spark" %% "spark-sql" % "2.4.8",
+  "org.apache.spark" %% "spark-sql-kafka-0-10" % "2.4.8",
+  "org.apache.spark" %% "spark-streaming-kafka-0-10" % "2.4.8",
+  "org.apache.spark" %% "spark-streaming" % "2.4.8" % "provided"
+
+)
+
+lazy val jdbc = Seq(
+    "org.postgresql" % "postgresql" % "42.3.3"
 )
 lazy val vega = Seq(
     //"org.openjfx" % "javafx-swing" % "17",
@@ -25,15 +34,27 @@ lazy val play = Seq(
     "com.typesafe.play" %% "play-json" % "2.7.4"
 )
 
+
+assemblyMergeStrategy in assembly := {
+    case PathList("META-INF", xs @ _*) => MergeStrategy.discard
+    case x => MergeStrategy.first
+}
+
 lazy val root = (project in file("."))
   .settings(
     name := "lab",
+
+    assembly / mainClass := Some("org.goldteam.kafka.consumer.PSQLConsumer"),
+    assembly / assemblyJarName := "PSQLConsumer-0.8.0.jar",
+
+
     libraryDependencies += scalaTest % Test,
     libraryDependencies += "com.github.tototoshi" %% "scala-csv" % "1.3.10",
     libraryDependencies ++= play,
     libraryDependencies ++= spark,
     libraryDependencies ++= vega,
     libraryDependencies ++= kafka,
+    libraryDependencies ++= jdbc
 
 
 

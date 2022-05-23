@@ -1,3 +1,4 @@
+package org.goldteam.generator;
 import GeneratorObjects._
 import scala.collection.mutable.MutableList;
 import scala.util.Random
@@ -332,6 +333,14 @@ object Generator extends App {
     output = output + "\t\"qty\" : " + order.qty + ",\n";
     output = output + "\t\"price\" : " + product.product_price + ",\n";
     output = output + "\t\"datetime\" : \"" + order.order_datetime.toString() + "\",\n";
+
+    ////TODO -- remove the unix timestamp.  Placed here for testing purposes. conver to format "yyyy-MM-dd HH:mm:ss"
+    val fmt = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+    val date = fmt.format(order.order_datetime)
+    ////output = output + "\t\"time\" : " + order.order_datetime.getTime()/1000 + ",\n";
+    output = output + "\t\"time\" : \"" + date + "\",\n";
+    println(date)
+
     output = output + "\t\"country\" : \"" + customer.country + "\",\n";
     output = output + "\t\"city\" : \"" + customer.city + "\",\n";
     output = output + "\t\"ecommerce_website_name\" : \"" + order.ecommerce_website_name + "\",\n";
@@ -395,5 +404,12 @@ object Generator extends App {
   println();
   println(modset_tool_materials.getDistributionString(true));
   println();
+
+}
+
+object GeneratorMain extends App {
+  for (i <- 0 until 10) {
+    println(Generator.generateOrderJSON());
+  }
 
 }

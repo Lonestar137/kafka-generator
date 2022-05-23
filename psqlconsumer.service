@@ -1,0 +1,18 @@
+[Unit]
+Description=PSQL Consumer for Kafka.
+Documentation=Please refer to https://github.com/Lonestar137/kafka-generator
+After=network-online.target 
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/bin/sh -c 'scala /opt/kafka-generator/target/scala-2.11/PSQLConsumer-{version}.jar --db-host=localhost:5432 --db=kafka --bootstrap-server=localhost:9092 --user=your_user--pass=your_pass --topic=genericTopic'
+TimeoutSec=0
+RestartSec=2
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
+
+
