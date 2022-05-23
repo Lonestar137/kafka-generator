@@ -1,7 +1,7 @@
 import Dependencies._
 
 ThisBuild / scalaVersion     := "2.11.12"
-ThisBuild / version          := "0.1.0-SNAPSHOT"
+ThisBuild / version          := "0.8.0"
 ThisBuild / organization     := "com.goldteam"
 ThisBuild / organizationName := "goldteam"
 
@@ -45,7 +45,7 @@ lazy val root = (project in file("."))
     name := "lab",
 
     assembly / mainClass := Some("org.goldteam.kafka.consumer.PSQLConsumer"),
-    assembly / assemblyJarName := "PSQLConsumer.jar",
+    assembly / assemblyJarName := s"PSQLConsumer-$version.jar",
 
 
     libraryDependencies += scalaTest % Test,
