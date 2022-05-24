@@ -49,6 +49,8 @@ object KafkaProducerMain extends App {
   //loc, topic, value
   var run = true
   var sleep_time = scala.util.Random.nextInt(30)*10 //wait time between messages 10-300 ms
+  Generator.initializeGenerator();
+  //Generator.testRun();
   while(run){
     var value = Generator.generateOrderJSON()
     GoldteamProducer.producer("localhost:9092", "generatorTest", value)

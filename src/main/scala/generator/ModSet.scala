@@ -9,9 +9,9 @@ class ModSet {
 	var mods : MutableList[Mod] = MutableList();
 
 	def this(modSetName : String, modList : MutableList[Mod]) {
-		this(); 
-		this.name = modSetName; 
-		this.mods = modList;
+		this();
+		this.name = modSetName;
+		this.mods ++= modList;
 	}
 
 	def this(modSetName : String, modList : Mod*) {
@@ -19,10 +19,9 @@ class ModSet {
 		this.name = modSetName;
 		this.mods ++= modList;
 		var baseProbability = 1f / this.mods.size.toFloat;
-		for (mod <- this.mods) { 
-			mod.probability = baseProbability;
-			mod.originalProbability = baseProbability;
-			mod.probabilityTrendPeak = 2f * baseProbability;
+		for (mod <- this.mods) {
+			mod.baseProbability = baseProbability;
+			mod.maxProbability = 2f * baseProbability;
 		}
 	}
 
@@ -54,12 +53,24 @@ class ModSet {
 
 	}
 
-	def setModProbabilities(baseProb : Float) : Unit = {
-		for(mod <- mods) { 
-			mod.originalProbability = baseProb;
-			mod.probabilityTrendPeak = baseProb;
-			mod.probability = baseProb;
+	def getModLinear(trendAlpha : Float) : Mod = {		
+		if (this.mods == null || this.mods.isEmpty) { throw new Exception("Unable to select a random mod. No mods present in ModSet."); }
+
+		var modIndex : Int = 0; var attempts : Int = 0;
+		while (attempts < 100000) { // max of 100,000 attempts
+			// select first mod whose probability hits
+			modIndex = Random.nextInt(this.mods.size);
+			if (Random.nextFloat() < this.mods(modIndex).probability(trendAlpha)) {
+				return this.mods(modIndex);
+			}
+			attempts += 1;
 		}
+
+		throw new Exception("Unable to select a random mod. No probabilities were hit after 100,000 attempts.");
+	}
+
+	def setModProbabilities(baseProb : Float) : Unit = {
+		for(mod <- mods) { mod.setProbabilityTrendInfo(baseProb, baseProb); }
 	}
 
 	def setPriceTrendInfo(modName: String, basePrice : Float, maxPrice : Float) : Unit = {
