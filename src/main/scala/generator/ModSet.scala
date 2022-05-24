@@ -26,7 +26,7 @@ class ModSet {
 	}
 
 	def apply(name: String): Mod = {
-		if (name == null || name.isBlank) { return null; }
+		if (name == null) { return null; }
 		for (mod <- this.mods) { if (mod.name == name) { return mod; } }
         return null;
     }
