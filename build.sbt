@@ -45,7 +45,7 @@ lazy val root = (project in file("."))
     name := "lab",
 
     assembly / mainClass := Some("org.goldteam.kafka.consumer.PSQLConsumer"),
-    assembly / assemblyJarName := "PSQLConsumer-0.8.0.jar",
+    assembly / assemblyJarName := s"PSQLConsumer-${scalaVersion.value}.jar",
 
 
     libraryDependencies += scalaTest % Test,
