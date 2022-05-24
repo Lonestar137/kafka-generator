@@ -7,7 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.concurrent.ThreadLocalRandom;
 
 
-object Generator {
+object Generator extends App {
   
   var generatorRunCount : Int = 30000;
   
@@ -298,30 +298,30 @@ object Generator {
 
     output = "";
     output += "{\n";
-    output += "\t\"order_id\" : " + order.order_id + ",\n";
-    output += "\t\"customer_id\" : " + order.order_customer_id + ",\n";
-    output += "\t\"customer_name\" : \"" + customer.customer_name + "\",\n";
-    output += "\t\"product_id\" : " + product.product_id + ",\n";
-    output += "\t\"product_name\" : \"" + product.product_name + "\",\n";
-    output += "\t\"product_category\" : \"" + product.product_category + "\",\n";
-    output += "\t\"payment_type\" : \"" + paymentType + "\",\n";
-    output += "\t\"qty\" : " + order.qty + ",\n";
-    output += "\t\"price\" : " + f"${product.product_price}%.2f" + ",\n";
-    output += "\t\"datetime\" : \"" + order.order_datetime.toString() + "\",\n";
+    output += "\t\"order_id\":" + order.order_id + ",\n";
+    output += "\t\"customer_id\":" + order.order_customer_id + ",\n";
+    output += "\t\"customer_name\":\"" + customer.customer_name + "\",\n";
+    output += "\t\"product_id\":" + product.product_id + ",\n";
+    output += "\t\"product_name\":\"" + product.product_name + "\",\n";
+    output += "\t\"product_category\":\"" + product.product_category + "\",\n";
+    output += "\t\"payment_type\":\"" + paymentType + "\",\n";
+    output += "\t\"qty\":" + order.qty + ",\n";
+    output += "\t\"price\":" + f"${product.product_price}%.2f" + ",\n";
+    output += "\t\"datetime\":\"" + order.order_datetime.toString() + "\",\n";
 
     ////TODO -- remove the unix timestamp.  Placed here for testing purposes. conver to format "yyyy-MM-dd HH:mm:ss"
     val fmt = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
     val date = fmt.format(order.order_datetime)
     ////output += "\t\"time\" : " + order.order_datetime.getTime()/1000 + ",\n";
-    output += "\t\"time\" : \"" + date + "\",\n";
+    output += "\t\"time\":\"" + date + "\",\n";
     //println(date)
 
-    output += "\t\"country\" : \"" + customer.country + "\",\n";
-    output += "\t\"city\" : \"" + customer.city + "\",\n";
-    output += "\t\"ecommerce_website_name\" : \"" + order.ecommerce_website_name + "\",\n";
-    output += "\t\"payment_txn_id\" : \"" + order.payment_txn_id + "\",\n";
-    output += "\t\"payment_txn_success\" : " + transactionSuccess + ",\n";
-    output += "\t\"failure_reason\" : \"" + transactionFailureReason + "\"\n";
+    output += "\t\"country\":\"" + customer.country + "\",\n";
+    output += "\t\"city\":\"" + customer.city + "\",\n";
+    output += "\t\"ecommerce_website_name\":\"" + order.ecommerce_website_name + "\",\n";
+    output += "\t\"payment_txn_id\":\"" + order.payment_txn_id + "\",\n";
+    output += "\t\"payment_txn_success\":" + transactionSuccess + ",\n";
+    output += "\t\"failure_reason\":\"" + transactionFailureReason + "\"\n";
     output += "}";
 
     return output.replace("\t","").replace("\n","");
@@ -409,20 +409,23 @@ object Generator {
       println(orderJSON);
     }
     
-    println();
-    println(modset_payment_types.getDistributionString(true));
-    println();
-    println(modset_electronic_brands.getDistributionString(true));
-    println();
-    println(modset_electronic_types.getDistributionString(true));
-    println();
-    println(modset_clothing_materials.getDistributionString(true));
-    println();
-    println(modset_tool_materials.getDistributionString(true));
-    println();
-    println(modset_countries.getDistributionString(true));
-    println();
+    // println();
+    // println(modset_payment_types.getDistributionString(true));
+    // println();
+    // println(modset_electronic_brands.getDistributionString(true));
+    // println();
+    // println(modset_electronic_types.getDistributionString(true));
+    // println();
+    // println(modset_clothing_materials.getDistributionString(true));
+    // println();
+    // println(modset_tool_materials.getDistributionString(true));
+    // println();
+    // println(modset_countries.getDistributionString(true));
+    // println();
 
   }
+
+  initializeGenerator();
+  testRun();
 
 }
