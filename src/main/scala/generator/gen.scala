@@ -57,7 +57,7 @@ object Generator extends App {
   
   // ecommerce_website_name (Site from where order was placed) = pull from weighted listOfWebsites
   val order_ecommerce_website_names : MutableList[String] = MutableList("amazon.com","walmart.com","ebay.com");
-  val modset_ecommerce_websites : ModSet = new ModSet(
+  val modset_ecommerce_websites : ModSet = new ModSet("Ecommerce Website Names",
     Mod("webstore.com"),
     Mod("onlineretail.com"),
     Mod("internetshop.com")
