@@ -11,7 +11,7 @@ object Generator {
   
   val dateFormat : SimpleDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
   
-  var generatorRunCount : Int = 30000;  
+  var generatorRunCount : Int = 30000;
 
   // order_id = increasing integer value
   var current_order_id : Int = 0;
@@ -439,7 +439,7 @@ object Generator {
 
   }
 
-  initializeGenerator();
-  testRun();
+  //initializeGenerator();
+  //testRun();
 
 }
