@@ -7,7 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.concurrent.ThreadLocalRandom;
 
 
-object Generator extends App {
+object Generator {
   
   val dateFormat : SimpleDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
   
