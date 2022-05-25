@@ -7,6 +7,10 @@ If you have not, please refer to these resources:
 Or, for Ubuntu users:
 [Ubuntu Kafka Install](https://www.digitalocean.com/community/tutorials/how-to-install-apache-kafka-on-ubuntu-20-04)  
 
+Alternatively, you may configure Kafka and Zookeeper using a Docker container
+
+[Docker Kafka Install](https://towardsdatascience.com/how-to-install-apache-kafka-using-docker-the-easy-way-4ceb00817d8b)
+
 ## Base setup  
 1.  Setup Scala 2.11.x
 2.  Setup SBT (Pref 1.6.2)
