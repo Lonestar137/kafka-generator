@@ -9,10 +9,13 @@ import java.util.concurrent.ThreadLocalRandom;
 
 object Generator extends App {
   
-  var generatorRunCount : Int = 30000;
-  
   val dateFormat : SimpleDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+  
+  var generatorRunCount : Int = 30000;  
 
+  // order_id = increasing integer value
+  var current_order_id : Int = 0;
+  
   def randomString(list: scala.collection.mutable.MutableList[String]) : String = {
     return list(Random.nextInt(list.size));
   }
@@ -27,8 +30,10 @@ object Generator extends App {
     }
   }
 
-  // order_id = increasing integer value
-  var current_order_id : Int = 0;
+  def generatorAlpha() : Float = {
+    return (current_order_id + 1).toFloat / generatorRunCount.toFloat;
+  }
+
 
   // payment_type = pull from {card, Internet Banking, UPI, Wallet}
   val order_payment_types : MutableList[String] = MutableList("Credit","Debit","Internet Banking","UPI","Cash");
@@ -218,8 +223,8 @@ object Generator extends App {
       modset_tool_materials("Steel").startTrend(); 
     }
     
-    var mod_material = modset_tool_materials.getMod();
-    var mod_type = modset_tool_types.getMod();
+    var mod_material = modset_tool_materials.getModLinear(generatorAlpha());
+    var mod_type = modset_tool_types.getModLinear(generatorAlpha());
 
     var newProduct = new Product();
     newProduct.product_category_=(s"${mod_material.name} $product_tool_category");
@@ -238,10 +243,10 @@ object Generator extends App {
       modset_clothing_materials("Denim").startTrend(); 
     }
     
-    var mod_color = modset_clothing_colors.getMod();
-    var mod_size = modset_clothing_sizes.getMod();
-    var mod_material = modset_clothing_materials.getMod();
-    var mod_type = modset_clothing_types.getMod();
+    var mod_color = modset_clothing_colors.getModLinear(generatorAlpha());
+    var mod_size = modset_clothing_sizes.getModLinear(generatorAlpha());
+    var mod_material = modset_clothing_materials.getModLinear(generatorAlpha());
+    var mod_type = modset_clothing_types.getModLinear(generatorAlpha());
     
     var newProduct = new Product();
     newProduct.product_category_=(s"${mod_material.name} ${product_clothing_category}");
@@ -261,9 +266,9 @@ object Generator extends App {
     // laptop computer popularity increase
     if (Random.nextFloat() < 0.008f) { modset_electronic_types("Laptop").startTrend(); }
     
-    var mod_size : Mod = modset_electronic_sizes.getMod();
-    var mod_brand : Mod = modset_electronic_brands.getMod();
-    var mod_type : Mod = modset_electronic_types.getMod();
+    var mod_size : Mod = modset_electronic_sizes.getModLinear(generatorAlpha());
+    var mod_brand : Mod = modset_electronic_brands.getModLinear(generatorAlpha());
+    var mod_type : Mod = modset_electronic_types.getModLinear(generatorAlpha());
     
     var newProduct = new Product();
 
@@ -285,10 +290,10 @@ object Generator extends App {
     var productType : Int = 0;
     var output : String = "";
     
-    var country_mod = modset_countries.getModLinear((current_order_id + 1).toFloat / generatorRunCount.toFloat); country_mod.useName();
+    var country_mod = modset_countries.getModLinear(generatorAlpha()); country_mod.useName();
     customer = generateCustomer(country_mod);
     
-    var mod_category = modset_product_categories.getMod();
+    var mod_category = modset_product_categories.getModLinear(generatorAlpha());
     var category_name = mod_category.useName();
     if (category_name == "Tools") { product = generateTool(); }
     else if (category_name == "Clothing") { product = generateClothing(); }
@@ -344,7 +349,7 @@ object Generator extends App {
     var payType : String = "";
     // payment-type trend
     if (Random.nextFloat() < 0.004f) { for (mod <- modset_payment_types.mods) { mod.startTrendGrowOnly(); } }
-    payType = modset_payment_types.getMod().useName();
+    payType = modset_payment_types.getModLinear(generatorAlpha()).useName();
     nextProduct = payType match {
       case "Card" => generateOrderJSON_Card();
       case "Internet Banking" => generateOrderJSON_InternetBanking();
