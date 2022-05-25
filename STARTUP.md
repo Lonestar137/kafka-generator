@@ -7,16 +7,34 @@ If you have not, please refer to these resources:
 Or, for Ubuntu users:
 [Ubuntu Kafka Install](https://www.digitalocean.com/community/tutorials/how-to-install-apache-kafka-on-ubuntu-20-04)  
 
-Alternatively, you may configure Kafka and Zookeeper using a Docker container
+Alternatively, you may install and configure Kafka and Zookeeper using a Docker container (recommended):
 
 [Docker Kafka Install](https://towardsdatascience.com/how-to-install-apache-kafka-using-docker-the-easy-way-4ceb00817d8b)
 
 ## Base setup  
-1.  Setup Scala 2.11.x
-2.  Setup SBT (Pref 1.6.2)
-3.  Clone this repository
-4.  sbt assembly
-5.  Edit psqlconsumer.service, define your variables on the EXECSTART line.
+1. Setup Scala 2.11.x
+```
+# install sdkman.io
+
+curl -s "https://get.sdkman.io" | bash
+source "$HOME/.sdkman/bin/sdkman-init.sh"
+
+# install latest version of scala 2.11 via sdkman
+
+sdk install scala 2.11.12
+```
+
+
+2. Setup SBT (Pref 1.6.2)
+
+`sdk install sbt`
+
+3. Clone this repository
+
+`git clone https://github.com/Lonestar137/kafka-generator.git`
+
+4. sbt assembly
+5. Edit psqlconsumer.service, define your variables on the EXECSTART line.
 
 ## Kafka Consumer w/ PSQL 
 1.  Edit psqlconsumer.service  EXECSTART,  put your psql credentials.  If using a remote host or non-default port for kafka/psql, then you need to set that as well.
