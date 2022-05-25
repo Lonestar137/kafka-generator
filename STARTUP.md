@@ -45,16 +45,32 @@ ExecStart=/bin/sh -c 'scala /opt/kafka-generator/target/scala-2.11/PSQLConsumer-
 ```
 
 ## Kafka Consumer w/ PSQL 
-1.  Edit psqlconsumer.service  EXECSTART,  put your psql credentials.  If using a remote host or non-default port for kafka/psql, then you need to set that as well.
-2.  Copy the psqlconsumer.service to /etc/systemd/system/
-3.  Run sudo systemctl daemon-reload 
-4.  sudo systemctl start psqlconsumer.service
-5.  sudo systemctl status psqlconsumer.service to verify it's running.
-6.  (Optional) To troubleshoot the service, run:  sudo journalctl -u psqlconsumer.service
-7.  Verify database. (Connect to your database and see if tables are generated.)
+1. Edit psqlconsumer.service  EXECSTART,  put your psql credentials.  If using a remote host or non-default port for kafka/psql, then you need to set that as well.
+2. Copy the kafkaconsumer.service to /etc/systemd/system/
+3. Run sudo systemctl daemon-reload 
+4. sudo systemctl start psqlconsumer.service
+5. sudo systemctl status psqlconsumer.service to verify it's running.
+6. (Optional) To troubleshoot the service, run:  sudo journalctl -u psqlconsumer.service
+
+
+
+7. Verify database. (Connect to your database and see if tables are generated.)
+
+`select * from yourtable limit 10;`
+
 
 ## Kafka Producer  
 1. sbt run 
 2. At the prompt, select KafkaProducerMain.
 
 
+# Kafka topic creation, production, consumption:
+
+Create:
+`kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic generatorTest`
+
+Produce:
+`echo "Hello, World" | ~/kafka/bin/kafka-console-producer.sh --broker-list localhost:9092 --topic generatorTest > /dev/null`
+
+Consume:
+`kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic generatorTest --from-beginning`

@@ -53,7 +53,7 @@ object KafkaProducerMain extends App {
   //Generator.testRun();
   while(run){
     var value = Generator.generateOrderJSON()
-    GoldteamProducer.producer("localhost:9092", "generatorTest", value)
+    GoldteamProducer.producer("0.0.0.0:9092", "generatorTest", value)
     Thread.sleep(sleep_time) //sleep for 1 second
     sleep_time = scala.util.Random.nextInt(30)*10
   }
