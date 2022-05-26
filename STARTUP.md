@@ -46,13 +46,31 @@ ExecStart=/bin/sh -c 'scala /opt/kafka-generator/target/scala-2.11/PSQLConsumer-
 
 ## Kafka Consumer w/ PSQL 
 1. Edit psqlconsumer.service  EXECSTART,  put your psql credentials.  If using a remote host or non-default port for kafka/psql, then you need to set that as well.
+
+```
+ExecStart=/bin/sh -c 'scala /opt/kafka-generator/target/scala-2.11/PSQLConsumer-{version}.jar --db-host=localhost:5432 --db=kafka --bootstrap-server=localhost:9092 --user=your_user--pass=your_pass --topic=genericTopic'
+```
+
 2. Copy the kafkaconsumer.service to /etc/systemd/system/
+
+`cp ./kafkaconsumer.service /etc/systemd/system`
+
+
 3. Run sudo systemctl daemon-reload 
-4. sudo systemctl start psqlconsumer.service
-5. sudo systemctl status psqlconsumer.service to verify it's running.
+
+`sudo system ctl daemon-reload`
+
+4. Run sudo systemctl start psqlconsumer.service
+
+`sudo systemctl start psqlconsumer.service`
+
+5. Run sudo systemctl status psqlconsumer.service to verify it's running.
+
+`sudo systemctl status psqlconsumer.service`
+
 6. (Optional) To troubleshoot the service, run:  sudo journalctl -u psqlconsumer.service
 
-
+`sudo journalctl -u psqlconsumer.service`
 
 7. Verify database. (Connect to your database and see if tables are generated.)
 
@@ -61,16 +79,28 @@ ExecStart=/bin/sh -c 'scala /opt/kafka-generator/target/scala-2.11/PSQLConsumer-
 
 ## Kafka Producer  
 1. sbt run 
+
+```
+sbt
+
+> run
+```
+
 2. At the prompt, select KafkaProducerMain.
 
 
-# Kafka topic creation, production, consumption:
+# Helpful commands
 
-Create:
+### Kafka topic creation, production, consumption:
+
+**Create a Topic:**
+
 `kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic generatorTest`
 
-Produce:
+**Run Producer:**
+
 `echo "Hello, World" | ~/kafka/bin/kafka-console-producer.sh --broker-list localhost:9092 --topic generatorTest > /dev/null`
 
-Consume:
+**Run Consumer:**
+
 `kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic generatorTest --from-beginning`
