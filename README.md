@@ -2,7 +2,7 @@
 * Scala 2.11.x
 * SBT (Pref 1.6.2)
 * A working Kafka instance
-* PostgreSQL
+* PostgreSQL /w md5 password auth enabled.
 * A Linux OS
 
 ## Installation
