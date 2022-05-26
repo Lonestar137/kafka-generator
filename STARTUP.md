@@ -64,7 +64,7 @@ ExecStart=/bin/sh -c 'scala /opt/kafka-generator/target/scala-2.11/PSQLProducer-
 1. Edit KafkaProducer .service  EXECSTART.  
 
 ```
-ExecStart=/bin/sh -c 'scala /opt/kafka-generator/target/scala-2.11/KafkaProducer-{version}.jar  --topic=genericTopic'
+ExecStart=/bin/sh -c 'scala /opt/kafka-generator/target/scala-2.11/KafkaProducer-{version}.jar  --bootstrap-server=[kafka_host_ip]:[port] --topic=genericTopic'
 ```
 
 2. Copy the KafkaProducer.service to /etc/systemd/system/

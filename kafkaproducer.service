@@ -6,7 +6,7 @@ Wants=network-online.target
 
 [Service]
 Type=simple
-ExecStart=/bin/sh -c 'scala /opt/kafka-generator/target/scala-2.11/KafkaProducer-2.11.12.jar'
+ExecStart=/bin/sh -c 'scala /opt/kafka-generator/target/scala-2.11/KafkaProducer-2.11.12.jar --bootstrap_server=[kafka_host_ip]:[port] --topic=your_topic'
 TimeoutSec=0
 RestartSec=2
 Restart=always
