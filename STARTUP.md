@@ -38,55 +38,92 @@ sdk install scala 2.11.12
 
 `sbt assembly`
 
-5. **Edit psqlconsumer.service, define your variables on the EXECSTART line.**
+5. **Edit kafkaproducer.service, define your variables on the EXECSTART line.**
 
 ```
-ExecStart=/bin/sh -c 'scala /opt/kafka-generator/target/scala-2.11/PSQLConsumer-{version}.jar --db-host=localhost:5432 --db=kafka --bootstrap-server=localhost:9092 --user=your_user--pass=your_pass --topic=genericTopic'
+ExecStart=/bin/sh -c 'scala /opt/kafka-generator/target/scala-2.11/kafkaproducer-{version}.jar 
 ```
 
-## Kafka Consumer w/ PSQL 
-1. Edit psqlconsumer.service  EXECSTART,  put your psql credentials.  If using a remote host or non-default port for kafka/psql, then you need to set that as well.
+6. ****For the PSQLProducer service(not required), inside build.sbt make the following changes:**
+```
+    assembly / mainClass := Some("org.goldteam.kafka.consumer.PSQLConsumer"),
+    assembly / assemblyJarName := s"PSQLConsumer-${scalaVersion.value}.jar",
+
+
+    //assembly / mainClass := Some("org.goldteam.kafka.producer.KafkaProducerMain"),
+    //assembly / assemblyJarName := s"KafkaProducer-${scalaVersion.value}.jar",
 
 ```
-ExecStart=/bin/sh -c 'scala /opt/kafka-generator/target/scala-2.11/PSQLConsumer-{version}.jar --db-host=localhost:5432 --db=kafka --bootstrap-server=localhost:9092 --user=your_user--pass=your_pass --topic=genericTopic'
+Rerun `sbt assembly`.
+
+```
+ExecStart=/bin/sh -c 'scala /opt/kafka-generator/target/scala-2.11/PSQLProducer-{version}.jar --db-host=localhost:5432 --db=your_psql_db --bootstrap-server=localhost:9092 --user=your_user--pass=your_pass --topic=genericTopic'
 ```
 
-2. Copy the kafkaconsumer.service to /etc/systemd/system/
+## KafkaProducer
+1. Edit KafkaProducer .service  EXECSTART.  
 
-`cp ./kafkaconsumer.service /etc/systemd/system`
+```
+ExecStart=/bin/sh -c 'scala /opt/kafka-generator/target/scala-2.11/KafkaProducer-{version}.jar  --topic=genericTopic'
+```
+
+2. Copy the KafkaProducer.service to /etc/systemd/system/
+
+`sudo cp ./kafkaproducer.service /etc/systemd/system`
 
 
 3. Run sudo systemctl daemon-reload 
 
 `sudo system ctl daemon-reload`
 
-4. Run sudo systemctl start psqlconsumer.service
+4. Run sudo systemctl start kafkaproducer.service
 
 `sudo systemctl start psqlconsumer.service`
 
-5. Run sudo systemctl status psqlconsumer.service to verify it's running.
+5. Run sudo systemctl status kafkaproducer.service to verify it's running.
 
-`sudo systemctl status psqlconsumer.service`
+`sudo systemctl status kafkaproducer.service`
 
-6. (Optional) To troubleshoot the service, run:  sudo journalctl -u psqlconsumer.service
+6. (Optional) To troubleshoot the service, run:  sudo journalctl -u kafkaproducer.service
 
-`sudo journalctl -u psqlconsumer.service`
+`sudo journalctl -u kafkaproducer.service`
 
 7. Verify database. (Connect to your database and see if tables are generated.)
 
 `select * from yourtable limit 10;`
 
 
-## Kafka Producer  
-1. sbt run 
+## PSQL Consumer
+You will need to define the below options, which can be seen by running the PSQLConsumer file with the `--help` option:
+```
+Usage: scala SparkKafkaConsumer.jar --db-host=[psql_host:port] --bootstrap-server=[kafka-bootstrap:port] ...
 
+Database credentials and servers must be defined for this program to operate correctly. Use the options below to do so.
+
+Required:
+  Options: --db-host           The host server:port that contains the db to write data to.
+  --db                The db to write the data to(looks for local db by default).
+  --bootstrap-server  The kafka server to read from.
+  --user              Database user to access tables.
+  --pass              Database password to access tables.
+
+  Choose One Option:
+  --topic             Kafka topic to read from.
+  --topics            Kafka topics to read from, if you select this option don't use the other topic option. List comma separated topics.
+
+Other Options:
+  --spark-master      Not implemented.
+```
+
+Example:
+1. Running the project.  Inside the root directory of the project(the same level as the build.sbt) do:
 ```
 sbt
 
-> run
+> run --db_host=ip_hosting_psql:port --db=your_db  --user=psql_user --pass=psql_pass --bootstrap-server=kafka_server_ip:port --topic=your_kafka_topic
 ```
 
-2. At the prompt, select KafkaProducerMain.
+2. At the prompt, select PSQLConsumer.
 
 
 # Helpful commands
