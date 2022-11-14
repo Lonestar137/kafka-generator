@@ -1,30 +1,15 @@
 package org.goldteam.kafka.consumer;
 
-import java.util.Calendar
+import constants.Output.{HELPTEXT, NO_ARG_INFO}
+
 import java.util.Properties
 import scala.collection.JavaConverters._
-import org.apache.kafka.clients.producer.{KafkaProducer, ProducerRecord}
-import org.apache.kafka.clients.consumer.{ConsumerConfig, KafkaConsumer}
-import scala.collection.mutable.ListBuffer
+import org.apache.kafka.clients.consumer.KafkaConsumer
 
-//spark
+import scala.collection.mutable.ListBuffer
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.SparkSession
-import org.apache.spark.sql.Row
-import org.apache.spark.sql.types.{StructType, StructField}
-//import org.apache.spark.streaming.kafka.KafkaUtils
-import org.apache.spark.streaming.kafka010._
-import org.apache.spark.streaming.kafka010.KafkaUtils
-import org.apache.spark.streaming.kafka010.ConsumerStrategies.Subscribe
-import org.apache.spark.streaming.kafka010.LocationStrategies.PreferConsistent
-//drivers
-import java.sql.DriverManager
-import java.sql.Connection
-
-//json
 import play.api.libs.json._
-
-//custom classes
 import logging.OutputFunctions
 
 object SparkKafkaConsumer {
@@ -32,7 +17,6 @@ object SparkKafkaConsumer {
     .master("local[*]")
     .appName("SparkKafkaConsumer")
     .getOrCreate()
-  import spark.implicits._
 
   def consumer(topic: String = "test"): Unit = {
     val properties = new Properties()
@@ -61,18 +45,10 @@ object SparkKafkaConsumer {
         val records = kafkaConsumer.poll(100)
         for (record <- records.asScala) {
           val record_string: String = record.value()
-          // println(s"offset = ${record.offset()}, key = ${record.key()}, value = ${record.value()}")
-          // val jsonD = parse(record.value()).extract[Map[String, Any]]
+
           val jsonD: JsValue = Json.parse(record_string)
           println("Key():" + jsonD("order_id"))
           println(jsonD)
-          // println("Keyjsobj:"+jsonD2("order_id"))
-          // println("Key--:"+jsonD \\ "order_id")
-          // println("Keyjsobj:"+jsonD.as[JsObject]("order_id"))
-          // val jsonD2: JsObject = jsonD.as[JsObject]
-          // println("Keyjsobj:"+jsonD2("order_id"))
-          // println("Key--:"+jsonD \\ "order_id")
-
         }
       }
     } catch {
@@ -122,7 +98,6 @@ object SparkKafkaConsumer {
         var subscribed = true
 
         try {
-          // Note: Redundant subscription, not necessary, leaving for example purposes.
           kafkaConsumer.subscribe(topics.asJava)
           var json_seq = new ListBuffer[String]()
           while (subscribed) {
@@ -202,43 +177,23 @@ object SparkKafkaConsumer {
 }
 //PSQL main
 object PSQLConsumer extends App {
-  var user = ""
-  var pass = ""
-  var db = ""
-  var db_host = ""
-  var kafka_host = ""
-  var topic = ""
-  var topics = ""
+  var user: String = ""
+  var pass: String = ""
+  var db: String = ""
+  var db_host: String = ""
+  var kafka_host: String = ""
+  var topic: String  = ""
+  var topics: String = ""
 
-  var helpText = """
-Usage: scala SparkKafkaConsumer.jar --db-host=[psql_host:port] --bootstrap-server=[kafka-bootstrap:port] ...
-
-Database credentials and servers must be defined for this program to operate correctly. Use the options below to do so.
-
-Required:
-  Options:
-  --db-host           The host server:port that contains the db to write data to.
-  --db                The db to write the data to.
-  --bootstrap-server  The kafka server to read from.
-  --user              Database user to access tables.
-  --pass              Database password to access tables.
-
-  Choose One Option:
-  --topic             Kafka topic to read from.
-  --topics            Kafka topics to read from, if you select this option don't use the other topic option. List comma separated topics.
-
-Other Options:
-  --spark-master      Not implemented.
-"""
   if (args.isEmpty) {
-    println("No arguments passed please refer to the below.")
-    println(helpText)
+    println(NO_ARG_INFO)
+    println(HELPTEXT)
     sys.exit
   }
 
   // TODO option for spark cluster manager, spark_ip, spark_port, spark_processors, AND array_buffer chunk size.
   args.foreach(arg => {
-    if (arg.matches("--help")) { println(helpText); sys.exit }
+    if (arg.matches("--help")) { println(HELPTEXT); sys.exit }
     else if (arg.matches("--db-host=.+")) db_host = arg.split("=")(1)
     else if (arg.matches("--bootstrap-server=.+"))
       kafka_host = arg.split("=")(1)
